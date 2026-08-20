@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Bob {
     public static void main(String[] args) {
         String intro = " _   _      _ _          ___ _                  ____        _     _ \n"
@@ -19,6 +21,14 @@ public class Bob {
         
         System.out.println(intro);
         System.out.println(ask);
+
+        Scanner scanner = new Scanner(System.in);
+        String userCmd = scanner.nextLine();
+        while(!userCmd.equals("bye")){
+            System.out.println(userCmd);
+            userCmd = scanner.nextLine();
+        }
         System.out.println(bye);
+        scanner.close();
     }
 }
