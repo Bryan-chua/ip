@@ -1,17 +1,28 @@
+package bob;
+
 import java.util.Scanner;
 
+/**
+ * Runs the Bob task manager through a text interface.
+ */
 public class Bob {
-    static void outputList(String[] input, boolean[] isDone) {
+    private Bob() {
+    }
+
+    private static void outputList(Task[] tasks) {
         int count = 0;
-        while (count < input.length && input[count] != null) {
-            String statusIcon = isDone[count] ? "X" : " ";
-            System.out.println(count + 1 + ".[" + statusIcon + "] " + input[count]);
+        while (count < tasks.length && tasks[count] != null) {
+            System.out.println(count + 1 + "." + tasks[count].getDisplayText());
             count++;
         }
     }
 
+    /**
+     * Starts the text interface.
+     *
+     * @param args Command-line arguments; not used.
+     */
     public static void main(String[] args) {
-        // responses
         String intro = " _   _      _ _          ___ _                  ____        _     _ \n"
             + "| | | | ___| | | ___    |_ _|' _ __ ___       | __ )  ___ | |__ | |\n"
             + "| |_| |/ _ \\ | |/ _ \\    | || | '_ ` _ \\      |  _ \\ / _ \\| '_ \\| |\n"
@@ -28,13 +39,10 @@ public class Bob {
             + "|                                   |\n"
             + "|  Bye! Hope to see you again soon! |\n"
             + "|___________________________________|\n";
-        
-        // variable creation
-        String[] input = new String[100];
-        boolean[] isDone = new boolean[100];
+
+        Task[] tasks = new Task[100];
         int count = 0;
 
-        // chatbot
         System.out.println(intro);
         System.out.println(ask);
 
@@ -42,18 +50,18 @@ public class Bob {
         String userCmd = scanner.nextLine();
         while (!userCmd.equals("bye")) {
             if (userCmd.equals("list")) {
-                outputList(input, isDone);
+                outputList(tasks);
             } else if (userCmd.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(userCmd.substring(5).trim());
-                isDone[taskNumber - 1] = true;
-                System.out.println("marked as done: " + input[taskNumber - 1]);
+                tasks[taskNumber - 1].markAsDone();
+                System.out.println("marked as done: " + tasks[taskNumber - 1].description);
             } else if (userCmd.startsWith("unmark ")) {
                 int taskNumber = Integer.parseInt(userCmd.substring(7).trim());
-                isDone[taskNumber - 1] = false;
-                System.out.println("marked as not done: " + input[taskNumber - 1]);
+                tasks[taskNumber - 1].markAsNotDone();
+                System.out.println("marked as not done: " + tasks[taskNumber - 1].description);
             } else {
                 System.out.println("added: " + userCmd);
-                input[count++] = userCmd;
+                tasks[count++] = new Task(userCmd);
             }
             userCmd = scanner.nextLine();
         }
