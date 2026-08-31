@@ -47,6 +47,10 @@ public class Bob {
                 int taskNumber = Integer.parseInt(userCmd.substring(5).trim());
                 isDone[taskNumber - 1] = true;
                 System.out.println("marked as done: " + input[taskNumber - 1]);
+            } else if (userCmd.startsWith("unmark ")) {
+                int taskNumber = Integer.parseInt(userCmd.substring(7).trim());
+                isDone[taskNumber - 1] = false;
+                System.out.println("marked as not done: " + input[taskNumber - 1]);
             } else {
                 System.out.println("added: " + userCmd);
                 input[count++] = userCmd;
