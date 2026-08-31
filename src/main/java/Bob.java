@@ -1,30 +1,15 @@
 import java.util.Scanner;
 
-public class Task {
-    protected String description;
-    protected boolean isDone;
-
-    public Task(String description) {
-        this.description = description;
-        this.isDone = false;
-    }
-
-    public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
-    }
-
-    //...
-}
-
 public class Bob {
-    static void outputList(String[] input) {
+    static void outputList(String[] input, boolean[] isDone) {
         int count = 0;
-        while(count < 100 && input[count] != null){
-            System.out.println(count+1 + ". " + input[count]);
+        while (count < input.length && input[count] != null) {
+            String statusIcon = isDone[count] ? "X" : " ";
+            System.out.println(count + 1 + ".[" + statusIcon + "] " + input[count]);
             count++;
         }
-        return;
     }
+
     public static void main(String[] args) {
         // responses
         String intro = " _   _      _ _          ___ _                  ____        _     _ \n"
@@ -46,6 +31,7 @@ public class Bob {
         
         // variable creation
         String[] input = new String[100];
+        boolean[] isDone = new boolean[100];
         int count = 0;
 
         // chatbot
@@ -54,11 +40,14 @@ public class Bob {
 
         Scanner scanner = new Scanner(System.in);
         String userCmd = scanner.nextLine();
-        while(!userCmd.equals("bye")){
-            if(userCmd.equals("list")){
-                outputList(input);
-            }
-            else{
+        while (!userCmd.equals("bye")) {
+            if (userCmd.equals("list")) {
+                outputList(input, isDone);
+            } else if (userCmd.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(userCmd.substring(5).trim());
+                isDone[taskNumber - 1] = true;
+                System.out.println("marked as done: " + input[taskNumber - 1]);
+            } else {
                 System.out.println("added: " + userCmd);
                 input[count++] = userCmd;
             }
