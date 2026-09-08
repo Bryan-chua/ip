@@ -50,4 +50,9 @@ public class Task {
     public String getDisplayText() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    @Override
+    public String toString() {
+        return getDisplayText();
+    }
 }
