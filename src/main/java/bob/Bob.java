@@ -49,59 +49,135 @@ public class Bob {
         Scanner scanner = new Scanner(System.in);
         String userCmd = scanner.nextLine();
         while (!userCmd.equals("bye")) {
-            if (userCmd.equals("list")) {
-                outputList(tasks);
-            } 
-            else if (userCmd.startsWith("mark ")) {
-                int taskNumber = Integer.parseInt(userCmd.substring(5).trim());
-                tasks[taskNumber - 1].markAsDone();
-                System.out.println("marked as done: " + tasks[taskNumber - 1].description);
-            } 
-            else if (userCmd.startsWith("unmark ")) {
-                int taskNumber = Integer.parseInt(userCmd.substring(7).trim());
-                tasks[taskNumber - 1].markAsNotDone();
-                System.out.println("marked as not done: " + tasks[taskNumber - 1].description);
-            } 
-            else if (userCmd.startsWith("todo ")) {
-                String description = userCmd.substring(4).trim();
-                Todo todo = new Todo(description);
-                tasks[count++] = todo;
+            try {
+                // list
+                if (userCmd.equals("list")) {
+                    outputList(tasks);
+                } 
+                // mark
+                else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
+                    String taskNumberStr = userCmd.substring("mark".length()).trim();
+                    if (taskNumberStr.isEmpty()) {
+                        throw new BobException("This cannot be empty!");
+                    }
+                    
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberStr);
+                    }
+                    catch (NumberFormatException exception) {
+                        throw new BobException("Please provide a valid task number.");
+                    }
 
-                System.out.println("Got it. I've added this task:");
-                System.out.println(todo);
-                System.out.println("Now you have " + count + " tasks in the list.");
+                    if (taskNumber < 1 || taskNumber > count) {
+                        throw new BobException("The task number does not exist.");
+                    }
+                    tasks[taskNumber - 1].markAsDone();
+                    System.out.println("marked as done: " + tasks[taskNumber - 1].description);
+                } 
+                // unmark
+                else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
+                    String taskNumberStr = userCmd.substring("unmark".length()).trim();
+                    if (taskNumberStr.isEmpty()) {
+                        throw new BobException("This cannot be empty!");
+                    }
+                    
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberStr);
+                    }
+                    catch (NumberFormatException exception) {
+                        throw new BobException("Please provide a valid task number.");
+                    }
+
+                    if (taskNumber < 1 || taskNumber > count) {
+                        throw new BobException("The task number does not exist.");
+                    }
+
+                    tasks[taskNumber - 1].markAsNotDone();
+                    System.out.println("marked as not done: " + tasks[taskNumber - 1].description);
+                } 
+                // todo
+                else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
+                    String description = userCmd.substring("todo".length()).trim();
+                    if (description.isEmpty()) {
+                        throw new BobException("Please provide a valid task.");
+                    }
+
+                    Todo todo = new Todo(description);
+                    tasks[count++] = todo;
+
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(todo);
+                    System.out.println("Now you have " + count + " tasks in the list.");
+                }
+                // deadline
+                else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
+                    String details = userCmd.substring("deadline".length());
+                    if (details.isEmpty()) {
+                        throw new BobException("Please provide a valid task.");
+                    }
+                    if (!details.contains(" /by ")) {
+                        throw new BobException("Please provide a valid deadline");
+                    }
+
+                    int byIndex = details.indexOf(" /by ");
+                    String description = details.substring(0, byIndex).trim();
+                    String by = details.substring(byIndex + " /by ".length()).trim();
+                    if (description.isEmpty()) {
+                        throw new BobException("Please provide a valid task.");
+                    }
+                    if (by.isEmpty()) {
+                        throw new BobException("Please provide a valid deadline");
+                    }
+
+                    Deadline deadline = new Deadline(description, by);
+                    tasks[count++] = deadline;
+
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(deadline);
+                    System.out.println("Now you have " + count + " tasks in the list.");
+                }
+                // event
+                else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
+                    String details = userCmd.substring("event".length());
+                    if (details.isEmpty()) {
+                        throw new BobException("Please provide a valid task.");
+                    }
+                    if (!details.contains(" /from ") || !details.contains(" /to ")) {
+                        throw new BobException("Please provide valid duration.");
+                    }
+
+                    int fromIndex = details.indexOf(" /from ");
+                    int fromStartIndex = fromIndex + " /from ".length();
+                    int toIndex = details.indexOf(" /to ");
+                    if (fromStartIndex > toIndex) {
+                        throw new BobException("Please give a valid timeline!");
+                    }
+
+                    String description = details.substring(0, fromIndex).trim();
+                    String from = details.substring(fromStartIndex, toIndex).trim();
+                    String to = details.substring(toIndex + " /to ".length()).trim();
+                    if (description.isEmpty()) {
+                        throw new BobException("Please provide a valid task.");
+                    }
+                    if (from.isEmpty() || to.isEmpty()) {
+                        throw new BobException("Please provide a valid deadline");
+                    }
+
+                    Event event = new Event(description, from, to);
+                    tasks[count++] = event;
+
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println(event);
+                    System.out.println("Now you have " + count + " tasks in the list.");
+                }
+                else {
+                    throw new BobException("I'm sorry, I don't quite get you!");
+                }
             }
-            else if (userCmd.startsWith("deadline ")) {
-                String details = userCmd.substring("deadline ".length());
-                int byIndex = details.indexOf(" /by ");
-                String description = details.substring(0, byIndex).trim();
-                String by = details.substring(byIndex + " /by ".length()).trim();
-
-                Deadline deadline = new Deadline(description, by);
-                tasks[count++] = deadline;
-
-                System.out.println("Got it. I've added this task:");
-                System.out.println(deadline);
-                System.out.println("Now you have " + count + " tasks in the list.");
-            }
-            else if (userCmd.startsWith("event ")) {
-                String details = userCmd.substring("event ".length());
-                int fromIndex = details.indexOf(" /from ");
-                int toIndex = details.indexOf(" /to ");
-                String description = details.substring(0, fromIndex).trim();
-                String from = details.substring(fromIndex + " /from ".length(), toIndex).trim();
-                String to = details.substring(toIndex + " /to ".length()).trim();
-
-                Event event = new Event(description, from, to);
-                tasks[count++] = event;
-
-                System.out.println("Got it. I've added this task:");
-                System.out.println(event);
-                System.out.println("Now you have " + count + " tasks in the list.");
-            }
-            else {
-                System.out.println("added: " + userCmd);
-                tasks[count++] = new Task(userCmd);
+            catch (BobException exception) {
+                System.out.println(exception.getMessage());
             }
             userCmd = scanner.nextLine();
         }
