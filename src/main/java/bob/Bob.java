@@ -1,5 +1,6 @@
 package bob;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -9,10 +10,10 @@ public class Bob {
     private Bob() {
     }
 
-    private static void outputList(Task[] tasks) {
+    private static void outputList(ArrayList<Task> tasks) {
         int count = 0;
-        while (count < tasks.length && tasks[count] != null) {
-            System.out.println((count + 1) + "." + tasks[count]);
+        for (Task task : tasks) {
+            System.out.println((count + 1) + "." + task);
             count++;
         }
     }
@@ -40,8 +41,7 @@ public class Bob {
             + "|  Bye! Hope to see you again soon! |\n"
             + "|___________________________________|\n";
 
-        Task[] tasks = new Task[100];
-        int count = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(intro);
         System.out.println(ask);
@@ -69,11 +69,11 @@ public class Bob {
                         throw new BobException("Please provide a valid task number.");
                     }
 
-                    if (taskNumber < 1 || taskNumber > count) {
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
-                    tasks[taskNumber - 1].markAsDone();
-                    System.out.println("marked as done: " + tasks[taskNumber - 1].description);
+                    tasks.get(taskNumber - 1).markAsDone();
+                    System.out.println("marked as done: " + tasks.get(taskNumber - 1).description);
                 } 
                 // unmark
                 else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
@@ -90,12 +90,12 @@ public class Bob {
                         throw new BobException("Please provide a valid task number.");
                     }
 
-                    if (taskNumber < 1 || taskNumber > count) {
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
 
-                    tasks[taskNumber - 1].markAsNotDone();
-                    System.out.println("marked as not done: " + tasks[taskNumber - 1].description);
+                    tasks.get(taskNumber - 1).markAsNotDone();
+                    System.out.println("marked as not done: " + tasks.get(taskNumber - 1).description);
                 } 
                 // todo
                 else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
@@ -105,11 +105,11 @@ public class Bob {
                     }
 
                     Todo todo = new Todo(description);
-                    tasks[count++] = todo;
+                    tasks.add(todo);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(todo);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 // deadline
                 else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
@@ -132,11 +132,11 @@ public class Bob {
                     }
 
                     Deadline deadline = new Deadline(description, by);
-                    tasks[count++] = deadline;
+                    tasks.add(deadline);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(deadline);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 // event
                 else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
@@ -166,11 +166,35 @@ public class Bob {
                     }
 
                     Event event = new Event(description, from, to);
-                    tasks[count++] = event;
+                    tasks.add(event);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(event);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                }
+                // delete
+                else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
+                    String taskNumberStr = userCmd.substring("delete".length()).trim();
+                    if (taskNumberStr.isEmpty()) {
+                        throw new BobException("This cannot be empty!");
+                    }
+                    
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberStr);
+                    }
+                    catch (NumberFormatException exception) {
+                        throw new BobException("Please provide a valid task number.");
+                    }
+
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
+                        throw new BobException("The task number does not exist.");
+                    }
+                    
+                    Task removedTask = tasks.remove(taskNumber-1);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println(removedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 else {
                     throw new BobException("I'm sorry, I don't quite get you!");
