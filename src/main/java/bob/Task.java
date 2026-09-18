@@ -51,6 +51,15 @@ public class Task {
         return "[" + getStatusIcon() + "] " + description;
     }
 
+    /**
+     * Returns this task in the format used for saving data.
+     *
+     * @return Serialized task data.
+     */
+    public String toDataString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + Storage.escapeField(description);
+    }
+
     @Override
     public String toString() {
         return getDisplayText();

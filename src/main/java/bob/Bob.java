@@ -1,19 +1,52 @@
 package bob;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Runs the Bob task manager through a text interface.
  */
 public class Bob {
+    /** Whether task data can be saved safely during the current run. */
+    private static boolean isStorageAvailable = true;
+
     private Bob() {
     }
 
-    private static void outputList(Task[] tasks) {
+    private static void outputList(ArrayList<Task> tasks) {
         int count = 0;
-        while (count < tasks.length && tasks[count] != null) {
-            System.out.println((count + 1) + "." + tasks[count]);
+        for (Task task : tasks) {
+            System.out.println((count + 1) + "." + task);
             count++;
+        }
+    }
+
+    private static ArrayList<Task> loadTasks() {
+        try {
+            return Storage.loadTasks();
+        } catch (BobException exception) {
+            isStorageAvailable = false;
+            System.out.println("I could not load your saved tasks: " + exception.getMessage());
+            System.out.println("Starting with an empty task list instead.");
+        } catch (IOException exception) {
+            isStorageAvailable = false;
+            System.out.println("I could not read the data file. Starting with an empty task list.");
+        }
+        return new ArrayList<>();
+    }
+
+    private static void saveTasks(ArrayList<Task> tasks) {
+        if (!isStorageAvailable) {
+            System.out.println("I could not save your tasks. Please check the data file and try again.");
+            return;
+        }
+
+        try {
+            Storage.saveTasks(tasks);
+        } catch (IOException exception) {
+            isStorageAvailable = false;
+            System.out.println("I could not save your tasks. Please check the data file and try again.");
         }
     }
 
@@ -40,14 +73,12 @@ public class Bob {
             + "|  Bye! Hope to see you again soon! |\n"
             + "|___________________________________|\n";
 
-        Task[] tasks = new Task[100];
-        int count = 0;
-
         System.out.println(intro);
         System.out.println(ask);
 
+        ArrayList<Task> tasks = loadTasks();
         Scanner scanner = new Scanner(System.in);
-        String userCmd = scanner.nextLine();
+        String userCmd = scanner.hasNextLine() ? scanner.nextLine() : "bye";
         while (!userCmd.equals("bye")) {
             try {
                 // list
@@ -69,11 +100,12 @@ public class Bob {
                         throw new BobException("Please provide a valid task number.");
                     }
 
-                    if (taskNumber < 1 || taskNumber > count) {
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
-                    tasks[taskNumber - 1].markAsDone();
-                    System.out.println("marked as done: " + tasks[taskNumber - 1].description);
+                    tasks.get(taskNumber - 1).markAsDone();
+                    saveTasks(tasks);
+                    System.out.println("marked as done: " + tasks.get(taskNumber - 1).description);
                 } 
                 // unmark
                 else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
@@ -90,12 +122,13 @@ public class Bob {
                         throw new BobException("Please provide a valid task number.");
                     }
 
-                    if (taskNumber < 1 || taskNumber > count) {
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
 
-                    tasks[taskNumber - 1].markAsNotDone();
-                    System.out.println("marked as not done: " + tasks[taskNumber - 1].description);
+                    tasks.get(taskNumber - 1).markAsNotDone();
+                    saveTasks(tasks);
+                    System.out.println("marked as not done: " + tasks.get(taskNumber - 1).description);
                 } 
                 // todo
                 else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
@@ -105,11 +138,12 @@ public class Bob {
                     }
 
                     Todo todo = new Todo(description);
-                    tasks[count++] = todo;
+                    tasks.add(todo);
+                    saveTasks(tasks);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(todo);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 // deadline
                 else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
@@ -132,11 +166,12 @@ public class Bob {
                     }
 
                     Deadline deadline = new Deadline(description, by);
-                    tasks[count++] = deadline;
+                    tasks.add(deadline);
+                    saveTasks(tasks);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(deadline);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 // event
                 else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
@@ -166,11 +201,37 @@ public class Bob {
                     }
 
                     Event event = new Event(description, from, to);
-                    tasks[count++] = event;
+                    tasks.add(event);
+                    saveTasks(tasks);
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(event);
-                    System.out.println("Now you have " + count + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+                }
+                // delete
+                else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
+                    String taskNumberStr = userCmd.substring("delete".length()).trim();
+                    if (taskNumberStr.isEmpty()) {
+                        throw new BobException("This cannot be empty!");
+                    }
+                    
+                    int taskNumber;
+                    try {
+                        taskNumber = Integer.parseInt(taskNumberStr);
+                    }
+                    catch (NumberFormatException exception) {
+                        throw new BobException("Please provide a valid task number.");
+                    }
+
+                    if (taskNumber < 1 || taskNumber > tasks.size()) {
+                        throw new BobException("The task number does not exist.");
+                    }
+                    
+                    Task removedTask = tasks.remove(taskNumber - 1);
+                    saveTasks(tasks);
+                    System.out.println("Noted. I've removed this task:");
+                    System.out.println(removedTask);
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 else {
                     throw new BobException("I'm sorry, I don't quite get you!");
@@ -179,7 +240,7 @@ public class Bob {
             catch (BobException exception) {
                 System.out.println(exception.getMessage());
             }
-            userCmd = scanner.nextLine();
+            userCmd = scanner.hasNextLine() ? scanner.nextLine() : "bye";
         }
         System.out.println(bye);
         scanner.close();
