@@ -2,7 +2,6 @@ package bob;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Runs the Bob task manager through a text interface.
@@ -12,14 +11,6 @@ public class Bob {
     private static boolean isStorageAvailable = true;
 
     private Bob() {
-    }
-
-    private static void outputList(ArrayList<Task> tasks) {
-        int count = 0;
-        for (Task task : tasks) {
-            System.out.println((count + 1) + "." + task);
-            count++;
-        }
     }
 
     private static ArrayList<Task> loadTasks() {
@@ -56,50 +47,20 @@ public class Bob {
      * @param args Command-line arguments; not used.
      */
     public static void main(String[] args) {
-        String intro = " _   _      _ _          ___ _                  ____        _     _ \n"
-            + "| | | | ___| | | ___    |_ _|' _ __ ___       | __ )  ___ | |__ | |\n"
-            + "| |_| |/ _ \\ | |/ _ \\    | || | '_ ` _ \\      |  _ \\ / _ \\| '_ \\| |\n"
-            + "|  _  |  __/ | | (_) |   | || | | | | | |     | |_) | (_) | |_) |_|\n"
-            + "|_| |_|\\___|_|_|\\___( ) |___|_|_| |_| |_|     |____/ \\___/|_.__/(_)\n"
-            + "                   |/                                             \n";
-
-        String ask = " _________________________ \n"
-            + "|                         |\n"
-            + "|  What can I do for you? |\n"
-            + "|_________________________|\n";
-
-        String bye = " ___________________________________ \n"
-            + "|                                   |\n"
-            + "|  Bye! Hope to see you again soon! |\n"
-            + "|___________________________________|\n";
-
-        System.out.println(intro);
-        System.out.println(ask);
-
+        Ui ui = new Ui();
+        Parser parser = new Parser();
+        ui.showIntro();
+        String userCmd = ui.readCommand();
         ArrayList<Task> tasks = loadTasks();
-        Scanner scanner = new Scanner(System.in);
-        String userCmd = scanner.hasNextLine() ? scanner.nextLine() : "bye";
         while (!userCmd.equals("bye")) {
             try {
                 // list
                 if (userCmd.equals("list")) {
-                    outputList(tasks);
+                    ui.showTasklist(tasks);
                 } 
                 // mark
                 else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
-                    String taskNumberStr = userCmd.substring("mark".length()).trim();
-                    if (taskNumberStr.isEmpty()) {
-                        throw new BobException("This cannot be empty!");
-                    }
-                    
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberStr);
-                    }
-                    catch (NumberFormatException exception) {
-                        throw new BobException("Please provide a valid task number.");
-                    }
-
+                    int taskNumber = parser.getTaskNumber(userCmd, "mark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
@@ -109,19 +70,7 @@ public class Bob {
                 } 
                 // unmark
                 else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
-                    String taskNumberStr = userCmd.substring("unmark".length()).trim();
-                    if (taskNumberStr.isEmpty()) {
-                        throw new BobException("This cannot be empty!");
-                    }
-                    
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberStr);
-                    }
-                    catch (NumberFormatException exception) {
-                        throw new BobException("Please provide a valid task number.");
-                    }
-
+                    int taskNumber = parser.getTaskNumber(userCmd, "unmark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
@@ -132,11 +81,7 @@ public class Bob {
                 } 
                 // todo
                 else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
-                    String description = userCmd.substring("todo".length()).trim();
-                    if (description.isEmpty()) {
-                        throw new BobException("Please provide a valid task.");
-                    }
-
+                    String description = parser.getDescription(userCmd, "todo");
                     Todo todo = new Todo(description);
                     tasks.add(todo);
                     saveTasks(tasks);
@@ -210,19 +155,7 @@ public class Bob {
                 }
                 // delete
                 else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
-                    String taskNumberStr = userCmd.substring("delete".length()).trim();
-                    if (taskNumberStr.isEmpty()) {
-                        throw new BobException("This cannot be empty!");
-                    }
-                    
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(taskNumberStr);
-                    }
-                    catch (NumberFormatException exception) {
-                        throw new BobException("Please provide a valid task number.");
-                    }
-
+                    int taskNumber = parser.getTaskNumber(userCmd, "delete");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
@@ -238,11 +171,11 @@ public class Bob {
                 }
             }
             catch (BobException exception) {
-                System.out.println(exception.getMessage());
+                ui.showError(exception.getMessage());
             }
-            userCmd = scanner.hasNextLine() ? scanner.nextLine() : "bye";
+            userCmd = ui.readCommand();
         }
-        System.out.println(bye);
-        scanner.close();
+        ui.showBye();
+        ui.closeScanner();
     }
 }
