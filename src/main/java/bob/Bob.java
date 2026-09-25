@@ -60,7 +60,7 @@ public class Bob {
                 } 
                 // mark
                 else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
-                    int taskNumber = parser.getTaskNumber(userCmd, "mark");
+                    int taskNumber = parser.parseTaskNumber(userCmd, "mark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
@@ -70,7 +70,7 @@ public class Bob {
                 } 
                 // unmark
                 else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
-                    int taskNumber = parser.getTaskNumber(userCmd, "unmark");
+                    int taskNumber = parser.parseTaskNumber(userCmd, "unmark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
@@ -81,7 +81,7 @@ public class Bob {
                 } 
                 // todo
                 else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
-                    String description = parser.getDescription(userCmd, "todo");
+                    String description = parser.parseDescription(userCmd, "todo");
                     Todo todo = new Todo(description);
                     tasks.add(todo);
                     saveTasks(tasks);
@@ -92,25 +92,8 @@ public class Bob {
                 }
                 // deadline
                 else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
-                    String details = userCmd.substring("deadline".length());
-                    if (details.isEmpty()) {
-                        throw new BobException("Please provide a valid task.");
-                    }
-                    if (!details.contains(" /by ")) {
-                        throw new BobException("Please provide a valid deadline");
-                    }
-
-                    int byIndex = details.indexOf(" /by ");
-                    String description = details.substring(0, byIndex).trim();
-                    String by = details.substring(byIndex + " /by ".length()).trim();
-                    if (description.isEmpty()) {
-                        throw new BobException("Please provide a valid task.");
-                    }
-                    if (by.isEmpty()) {
-                        throw new BobException("Please provide a valid deadline");
-                    }
-
-                    Deadline deadline = new Deadline(description, by);
+                    String[] deadlineDetails = parser.parseDeadline(userCmd);
+                    Deadline deadline = new Deadline(deadlineDetails[0], deadlineDetails[1]);
                     tasks.add(deadline);
                     saveTasks(tasks);
 
@@ -120,32 +103,8 @@ public class Bob {
                 }
                 // event
                 else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
-                    String details = userCmd.substring("event".length());
-                    if (details.isEmpty()) {
-                        throw new BobException("Please provide a valid task.");
-                    }
-                    if (!details.contains(" /from ") || !details.contains(" /to ")) {
-                        throw new BobException("Please provide valid duration.");
-                    }
-
-                    int fromIndex = details.indexOf(" /from ");
-                    int fromStartIndex = fromIndex + " /from ".length();
-                    int toIndex = details.indexOf(" /to ");
-                    if (fromStartIndex > toIndex) {
-                        throw new BobException("Please give a valid timeline!");
-                    }
-
-                    String description = details.substring(0, fromIndex).trim();
-                    String from = details.substring(fromStartIndex, toIndex).trim();
-                    String to = details.substring(toIndex + " /to ".length()).trim();
-                    if (description.isEmpty()) {
-                        throw new BobException("Please provide a valid task.");
-                    }
-                    if (from.isEmpty() || to.isEmpty()) {
-                        throw new BobException("Please provide a valid deadline");
-                    }
-
-                    Event event = new Event(description, from, to);
+                    String[] eventDetails = parser.parseEvent(userCmd);
+                    Event event = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
                     tasks.add(event);
                     saveTasks(tasks);
 
@@ -155,7 +114,7 @@ public class Bob {
                 }
                 // delete
                 else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
-                    int taskNumber = parser.getTaskNumber(userCmd, "delete");
+                    int taskNumber = parser.parseTaskNumber(userCmd, "delete");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("The task number does not exist.");
                     }
