@@ -99,6 +99,7 @@ public class Bob {
 
                     System.out.println("Got it. I've added this task:");
                     System.out.println(deadline);
+                    System.out.println("You've still got " + deadlineDetails[2] + " days " + deadlineDetails[3] + " hours left to finish this task!");
                     System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                 }
                 // event

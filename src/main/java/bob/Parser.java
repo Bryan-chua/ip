@@ -1,5 +1,11 @@
 package bob;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
+
 public class Parser {
     public Parser() {  
     }
@@ -47,7 +53,20 @@ public class Parser {
         if (by.isEmpty()) {
             throw new BobException("Please provide a valid deadline.");
         }
-        String[] output = {description, by};
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HHmm").withResolverStyle(ResolverStyle.STRICT);
+        LocalDateTime deadlineInfo;
+        try {
+            deadlineInfo = LocalDateTime.parse(by, formatter);
+        } catch (DateTimeParseException exception) {
+            throw new BobException("Please use the deadline format DD/MM/YYYY HHMM! eg. 04/05/2004 1200");
+        }
+        LocalDateTime now = LocalDateTime.now();
+        if (!deadlineInfo.isAfter(now)) {
+            throw new BobException("Please give a deadline in the future!");
+        }
+        Duration duration = Duration.between(now, deadlineInfo);
+        String[] output = {description, by, String.valueOf(duration.toDays()), String.valueOf(duration.toHoursPart())};
         return output;
     }
 
