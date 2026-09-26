@@ -40,9 +40,20 @@ public class Ui {
 
     public void showTasklist(ArrayList<Task> tasks){
         int count = 0;
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             System.out.println((count + 1) + ". " + task);
             count++;
+        }
+    }
+
+    public void showMatchingTasks(ArrayList<Task> tasks, String keyword){
+        int count = 1;
+        System.out.println("Here are the matching tasks in your list:");
+        for (Task task : tasks) {
+            if (task.description.contains(keyword)) {
+                System.out.println(count + ". " + task);
+                count++;
+            }
         }
     }
 

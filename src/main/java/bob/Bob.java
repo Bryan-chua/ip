@@ -58,6 +58,11 @@ public class Bob {
                 if (userCmd.equals("list")) {
                     ui.showTasklist(tasks);
                 } 
+                // find
+                else if (userCmd.equals("find") || userCmd.startsWith("find ")) {
+                    String keyword = parser.parseDescription(userCmd, "find");
+                    ui.showMatchingTasks(tasks, keyword);
+                }
                 // mark
                 else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
                     int taskNumber = parser.parseTaskNumber(userCmd, "mark");
