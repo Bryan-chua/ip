@@ -134,6 +134,8 @@ public class Bob {
                 else {
                     throw new BobException("I'm sorry, I don't quite get you!");
                 }
+
+                System.out.println("----------------------------------------------");
             }
             catch (BobException exception) {
                 ui.showError(exception.getMessage());
