@@ -23,12 +23,22 @@ public class Event extends Task {
         this.to = to;
     }
 
+    /**
+     * Returns this event in the format used for saving data.
+     *
+     * @return Serialized event data.
+     */
     @Override
     public String toDataString() {
         return "E | " + (isDone ? "1" : "0") + " | " + Storage.escapeField(description)
             + " | " + Storage.escapeField(from) + " | " + Storage.escapeField(to);
     }
 
+    /**
+     * Returns the display representation of this event.
+     *
+     * @return The event type, completion status, description, start, and end.
+     */
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";

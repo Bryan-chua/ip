@@ -60,6 +60,11 @@ public class Task {
         return "T | " + (isDone ? "1" : "0") + " | " + Storage.escapeField(description);
     }
 
+    /**
+     * Returns the display representation of this task.
+     *
+     * @return The task's completion status and description.
+     */
     @Override
     public String toString() {
         return getDisplayText();
