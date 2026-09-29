@@ -22,7 +22,7 @@ public class Task {
     /**
      * Returns the status icon for this task.
      *
-     * @return `X` if the task is done, or a space otherwise.
+     * @return {@code X} if the task is done, or a space otherwise.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";

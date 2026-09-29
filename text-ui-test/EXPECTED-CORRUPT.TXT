@@ -1,19 +1,16 @@
- _   _      _ _          ___ _                  ____        _     _ 
-| | | | ___| | | ___    |_ _|' _ __ ___       | __ )  ___ | |__ | |
-| |_| |/ _ \ | |/ _ \    | || | '_ ` _ \      |  _ \ / _ \| '_ \| |
-|  _  |  __/ | | (_) |   | || | | | | | |     | |_) | (_) | |_) |_|
-|_| |_|\___|_|_|\___( ) |___|_|_| |_| |_|     |____/ \___/|_.__/(_)
-                   |/                                             
+========================================
+           BOB'S TASK OUTPOST
+========================================
 
- _________________________ 
-|                         |
-|  What can I do for you? |
-|_________________________|
+Add 'em, track 'em, get 'em done.
 
-I could not load your saved tasks: Invalid data at line 1: status must be 0 or 1.
-Starting with an empty task list instead.
- ___________________________________ 
-|                                   |
-|  Bye! Hope to see you again soon! |
-|___________________________________|
+Howdy, partner! What's the plan?
+Trouble on the trail! I couldn't load your saved tasks: Invalid data at line 1 because the task status must be 0 or 1.
+We'll start with an empty task list instead.
+Your saddlebag is empty, partner.
+----------------------------------------------
+ ____________________________
+|                            |
+|  Until next time, partner! |
+|____________________________|
 

@@ -8,18 +8,12 @@ import java.util.Scanner;
  */
 public class Ui {
     private final Scanner scanner;
-    private static final String INTRO =
-            " _   _                     _          ___ _                  ____        _     _ \n"
-            + "| | | | _____      ____  _| |_   _  |_ _|' _ __ ___       | __ )  ___ | |__ | |\n"
-            + "| |_| |/ _ \\ \\ /\\ / / _` | | | |    | || | '_ ` _ \\      |  _ \\ / _ \\| '_ \\| |\n"
-            + "|  _  | (_) \\ V  V / (_| | | |_| |   | || | | | | | |     | |_) | (_) | |_) |_|\n"
-            + "|_| |_|\\___/ \\_/\\_/ \\__,_|_|\\__, |  |___|_|_| |_| |_|     |____/ \\___/|_.__/(_)\n"
-            + "                            |___/                                             \n";
-    private static final String ASK = " ____________________________ \n"
-            + "|                            |\n"
-            + "|  What's the plan, partner? |\n"
-            + "|____________________________|\n";
-    private static final String BYE = " ____________________________ \n"
+    private static final String INTRO = "========================================\n"
+            + "           BOB'S TASK OUTPOST\n"
+            + "========================================\n";
+    private static final String ASK = "Add 'em, track 'em, get 'em done.\n\n"
+            + "Howdy, partner! What's the plan?";
+    private static final String BYE = " ____________________________\n"
             + "|                            |\n"
             + "|  Until next time, partner! |\n"
             + "|____________________________|\n";

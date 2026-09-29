@@ -79,17 +79,12 @@ public class Bob {
         ArrayList<Task> tasks = loadTasks();
         while (!userCmd.equals("bye")) {
             try {
-                // list
                 if (userCmd.equals("list")) {
                     ui.showTasklist(tasks);
-                } 
-                // find
-                else if (userCmd.equals("find") || userCmd.startsWith("find ")) {
+                } else if (userCmd.equals("find") || userCmd.startsWith("find ")) {
                     String keyword = parser.parseDescription(userCmd, "find");
                     ui.showMatchingTasks(tasks, keyword);
-                }
-                // mark
-                else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
+                } else if (userCmd.equals("mark") || userCmd.startsWith("mark ")) {
                     int taskNumber = parser.parseTaskNumber(userCmd, "mark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("That task isn't in your list, partner.");
@@ -98,9 +93,7 @@ public class Bob {
                     saveTasks(tasks);
                     System.out.println("Task completed. Nice work, partner: "
                             + tasks.get(taskNumber - 1).description);
-                } 
-                // unmark
-                else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
+                } else if (userCmd.equals("unmark") || userCmd.startsWith("unmark ")) {
                     int taskNumber = parser.parseTaskNumber(userCmd, "unmark");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("That task isn't in your list, partner.");
@@ -110,9 +103,7 @@ public class Bob {
                     saveTasks(tasks);
                     System.out.println("This task is back on the trail: "
                             + tasks.get(taskNumber - 1).description);
-                } 
-                // todo
-                else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
+                } else if (userCmd.equals("todo") || userCmd.startsWith("todo ")) {
                     String description = parser.parseDescription(userCmd, "todo");
                     Todo todo = new Todo(description);
                     tasks.add(todo);
@@ -121,9 +112,7 @@ public class Bob {
                     System.out.println("Got it, partner. I've added this task:");
                     System.out.println(todo);
                     System.out.println(getTaskCountMessage(tasks.size()));
-                }
-                // deadline
-                else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
+                } else if (userCmd.equals("deadline") || userCmd.startsWith("deadline ")) {
                     String[] deadlineDetails = parser.parseDeadline(userCmd);
                     Deadline deadline = new Deadline(deadlineDetails[0], deadlineDetails[1]);
                     tasks.add(deadline);
@@ -134,9 +123,7 @@ public class Bob {
                     System.out.println("The clock's tickin'! You've got " + deadlineDetails[2] + " days and "
                             + deadlineDetails[3] + " hours left.");
                     System.out.println(getTaskCountMessage(tasks.size()));
-                }
-                // event
-                else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
+                } else if (userCmd.equals("event") || userCmd.startsWith("event ")) {
                     String[] eventDetails = parser.parseEvent(userCmd);
                     Event event = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
                     tasks.add(event);
@@ -145,27 +132,23 @@ public class Bob {
                     System.out.println("Got it, partner. I've added this task:");
                     System.out.println(event);
                     System.out.println(getTaskCountMessage(tasks.size()));
-                }
-                // delete
-                else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
+                } else if (userCmd.equals("delete") || userCmd.startsWith("delete ")) {
                     int taskNumber = parser.parseTaskNumber(userCmd, "delete");
                     if (taskNumber < 1 || taskNumber > tasks.size()) {
                         throw new BobException("That task isn't in your list, partner.");
                     }
-                    
+
                     Task removedTask = tasks.remove(taskNumber - 1);
                     saveTasks(tasks);
                     System.out.println("Consider this task gone, partner:");
                     System.out.println(removedTask);
                     System.out.println(getTaskCountMessage(tasks.size()));
-                }
-                else {
+                } else {
                     throw new BobException("I don't recognize that command, partner.");
                 }
 
                 System.out.println("----------------------------------------------");
-            }
-            catch (BobException exception) {
+            } catch (BobException exception) {
                 ui.showError(exception.getMessage());
             }
             userCmd = ui.readCommand();

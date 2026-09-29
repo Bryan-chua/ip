@@ -1,42 +1,50 @@
- _   _      _ _          ___ _                  ____        _     _ 
-| | | | ___| | | ___    |_ _|' _ __ ___       | __ )  ___ | |__ | |
-| |_| |/ _ \ | |/ _ \    | || | '_ ` _ \      |  _ \ / _ \| '_ \| |
-|  _  |  __/ | | (_) |   | || | | | | | |     | |_) | (_) | |_) |_|
-|_| |_|\___|_|_|\___( ) |___|_|_| |_| |_|     |____/ \___/|_.__/(_)
-                   |/                                             
+========================================
+           BOB'S TASK OUTPOST
+========================================
 
- _________________________ 
-|                         |
-|  What can I do for you? |
-|_________________________|
+Add 'em, track 'em, get 'em done.
 
-Got it. I've added this task:
+Howdy, partner! What's the plan?
+Got it, partner. I've added this task:
 [T][ ] read book
-Now you have 1 tasks in the list.
-Got it. I've added this task:
-[D][ ] return book (by: June 6th)
-Now you have 2 tasks in the list.
-Got it. I've added this task:
+You've got 1 task in your saddlebag.
+----------------------------------------------
+Hold your horses! Use DD/MM/YYYY HHMM for the deadline. For example, 31/12/2099 1200.
+----------------------------------------------
+Got it, partner. I've added this task:
 [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
-Now you have 3 tasks in the list.
-marked as done: read book
-marked as done: return book
-marked as not done: return book
-Noted. I've removed this task:
+You've got 2 tasks in your saddlebag.
+----------------------------------------------
+Task completed. Nice work, partner: read book
+----------------------------------------------
+Task completed. Nice work, partner: project meeting
+----------------------------------------------
+This task is back on the trail: project meeting
+----------------------------------------------
+Consider this task gone, partner:
 [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
-Now you have 2 tasks in the list.
-Got it. I've added this task:
+You've got 1 task in your saddlebag.
+----------------------------------------------
+Got it, partner. I've added this task:
 [E][ ] project demo (from: Friday 2pm to: 4pm)
-Now you have 3 tasks in the list.
-Got it. I've added this task:
+You've got 2 tasks in your saddlebag.
+----------------------------------------------
+Got it, partner. I've added this task:
 [T][ ] compare A | B \ notes
-Now you have 4 tasks in the list.
-1.[T][X] read book
-2.[D][ ] return book (by: June 6th)
-3.[E][ ] project demo (from: Friday 2pm to: 4pm)
-4.[T][ ] compare A | B \ notes
- ___________________________________ 
-|                                   |
-|  Bye! Hope to see you again soon! |
-|___________________________________|
+You've got 3 tasks in your saddlebag.
+----------------------------------------------
+Here's what I found on the trail:
+1. [E][ ] project demo (from: Friday 2pm to: 4pm)
+----------------------------------------------
+Here's what I found on the trail:
+Nothing turned up on the trail, partner.
+----------------------------------------------
+1. [T][X] read book
+2. [E][ ] project demo (from: Friday 2pm to: 4pm)
+3. [T][ ] compare A | B \ notes
+----------------------------------------------
+ ____________________________
+|                            |
+|  Until next time, partner! |
+|____________________________|
 
