@@ -19,3 +19,11 @@ _temp/
 
 /text-ui-test/ACTUAL*.TXT
 text-ui-test/EXPECTED-UNIX.TXT
+
+# Compiled Java files
+*.class
+
+# Local AI tooling
+/.codex/
+/AGENTS.md
+/CLAUDE.md
